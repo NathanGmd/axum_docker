@@ -8,21 +8,15 @@ use serde::{Deserialize, Serialize};
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
-    // build our application with a route
-    let app = Router::new()
-        // `GET /` goes to `root`
-        .route("/", get(root))
-        // `POST /users` goes to `create_user`
+    let app = Router::new()  // API routes
+        .route("/", get(ping))
         .route("/users", post(create_user));
-
-    // run our app with hyper, listening globally on port 3000
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3010").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
-
-// basic handler that responds with a static string
-async fn root() -> &'static str {
-    "Hello, World!"
+//ping 
+async fn ping() -> &'static str {
+    "server is running"
 }
 
 async fn create_user(
@@ -53,3 +47,5 @@ struct User {
     id: u64,
     username: String,
 }
+
+//mod handler;
